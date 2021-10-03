@@ -1,0 +1,21 @@
+{% extends "cab.html" %}
+
+{% load static %}
+
+{% block cab %}
+<br>
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+            <h3>Início:</h3>
+        </div>
+    </div>
+
+    <a href="{% url 'selecao:cadastro' %}" class="btn btn-primary" role="button">
+        Cadastrar
+    </a>
+
+</div>
+
+{% endblock %}
