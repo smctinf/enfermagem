@@ -41,7 +41,7 @@ email_pass = env[6]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(debug)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['enfermagem.pmnf.rj.gov.br']
 
 
 # Application definition
