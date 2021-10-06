@@ -4,6 +4,11 @@ from django.contrib import messages
 
 # Create your views here.
 
+def inicio_teste(request):
+
+    return render(request, 'inicio.html')
+
+
 def inicio(request):
     from datetime import date, datetime
 
