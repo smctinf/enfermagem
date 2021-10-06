@@ -18,14 +18,29 @@ def inicio(request):
 
 
 def cadastro(request):
+    from django.core.mail import send_mail
+
 
     if request.method == 'POST':
         form = CandidatoForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            cadastro = form.save()
 
-            form = CandidatoForm()
+            mensagem = 'Nome: ' + cadastro.nome
+            email = cadastro.email
+
+            send_mail(
+                'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
+                mensagem,
+                'enfermagem@sme.novafriburgo.rj.gov.br',
+                [email],
+                fail_silently=False,
+            )
+
+            # TODO: enviar por e-mail o protocolo de inscrição
+
+            return render(request, 'cadastrook.html')
 
         else:
             # Se teve erro:
