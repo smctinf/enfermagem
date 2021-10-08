@@ -22,7 +22,7 @@ class CandidatoForm(ModelForm):
 
     class Meta:
         model = Candidato
-        exclude = ['dt_inclusao']
+        exclude = ['chave', 'dt_inclusao']
 
     def clean_cpf(self):
         cpf = validate_CPF(self.cleaned_data["cpf"])

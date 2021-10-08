@@ -27,12 +27,17 @@ def cadastro(request):
     from django.template import Context
     from django.template.loader import render_to_string, get_template
     from django.core.mail import EmailMessage
+    import uuid
 
     if request.method == 'POST':
         form = CandidatoForm(request.POST)
 
         if form.is_valid():
-            cadastro = form.save()
+            cadastro = form.save(commit=False)
+
+            chave = str(uuid.uuid4())
+            cadastro.chave = chave
+            cadastro.save()
 
             dados = {
                 'id': cadastro.id,
@@ -53,7 +58,7 @@ def cadastro(request):
             msg = EmailMessage(
                 'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
                 mensagem,
-                'enfermagem@sme.novafriburgo.rj.gov.br',
+                'inscricao@sme.novafriburgo.rj.gov.br',
                 [cadastro.email],
             )
             msg.content_subtype = "html"  # Main content is now text/html
@@ -75,7 +80,7 @@ def cadastro(request):
             # TODO: enviar por e-mail o protocolo de inscrição
             """
 
-            return render(request, 'cadastrook.html')
+            return render(request, 'cadastrook.html', { 'chave': chave })
 
         else:
             # Se teve erro:
@@ -93,3 +98,9 @@ def cadastro(request):
         form = CandidatoForm()
 
     return render(request, 'cadastro.html', { 'form': form })
+
+def imprime(request, chave):
+    candidato = Candidato.objects.get(chave=chave)
+
+    return render(request, 'ficha.html', { 'candidato': candidato })
+

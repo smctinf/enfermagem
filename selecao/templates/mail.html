@@ -1,3 +1,5 @@
+{% load template_filters %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
@@ -20,11 +22,11 @@
         <br>
         Nome: {{ nome }}<br>
         Data Nascimento: {{ dt_nascimento | date:"SHORT_DATE_FORMAT" }}<br>
-        CPF: {{ cpf }}<br>
-        Celular: {{ celular }}<br>
-        Telefone: {{ tel }}<br>
+        CPF: {{ cpf | formata_cpf }}<br>
+        Celular: {{ celular | formata_tel }}<br>
+        Telefone: {{ tel | formata_tel }}<br>
         E-Mail: {{ email }}<br>
-        Possui deficiência? {{ deficiencia }}<br>
+        Possui deficiência? {% if deficiencia == 'S' %}Sim{% else %}Não{% endif %}<br>
         Indique qual deficiência? {{ qual_deficiencia }}<br>
         Informe se necessita de alguma condição especial para a realização da prova: {{ necessidade }}<br>
         Data Cadastro: {{ dt_inclusao | date:"SHORT_DATETIME_FORMAT" }}<br>
