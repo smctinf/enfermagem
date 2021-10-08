@@ -23,8 +23,10 @@ def inicio(request):
 
 
 def cadastro(request):
-    from django.core.mail import send_mail
-
+#    from django.core.mail import send_mail
+    from django.template import Context
+    from django.template.loader import render_to_string, get_template
+    from django.core.mail import EmailMessage
 
     if request.method == 'POST':
         form = CandidatoForm(request.POST)
@@ -32,9 +34,32 @@ def cadastro(request):
         if form.is_valid():
             cadastro = form.save()
 
-            mensagem = 'Nome: ' + cadastro.nome
-            email = cadastro.email
+            dados = {
+                'id': cadastro.id,
+                'nome': cadastro.nome,
+                'dt_nascimento': cadastro.dt_nascimento,
+                'cpf': cadastro.cpf,
+                'celular': cadastro.celular,
+                'tel': cadastro.tel,
+                'email': cadastro.email,
+                'deficiencia': cadastro.deficiencia,
+                'qual_deficiencia': cadastro.qual_deficiencia,
+                'necessidade': cadastro.necessidade,
+                'dt_inclusao': cadastro.dt_inclusao,
+            }
 
+            mensagem = get_template('mail.html').render(dados)
+
+            msg = EmailMessage(
+                'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
+                mensagem,
+                'enfermagem@sme.novafriburgo.rj.gov.br',
+                [cadastro.email],
+            )
+            msg.content_subtype = "html"  # Main content is now text/html
+            msg.send()
+
+            """
             send_mail(
                 'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
                 mensagem,
@@ -43,7 +68,12 @@ def cadastro(request):
                 fail_silently=False,
             )
 
+            msg = EmailMessage('Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem', template.render(mensagem), 'enfermagem@sme.novafriburgo.rj.gov.br', email)
+            msg.content_subtype = "html"
+            msg.send()
+
             # TODO: enviar por e-mail o protocolo de inscrição
+            """
 
             return render(request, 'cadastrook.html')
 

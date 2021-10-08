@@ -35,6 +35,7 @@ debug = env[4]
 email_user = env[5]
 email_pass = env[6]
 
+print(email_pass,email_user)
 
 
 
@@ -156,8 +157,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'Processo Seletivo para a Escola de Enfermagem <enfermagem@sme.novafriburgo.rj.gov.br>'
 
 EMAIL_USE_TLS = True
