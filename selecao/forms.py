@@ -3,6 +3,13 @@ from django.forms import ModelForm, ValidationError
 from .models import *
 from .functions import validate_CPF
 
+class ConsultaForm(forms.Form):
+    cpf = forms.CharField(label='CPF', max_length=14, widget = forms.TextInput(attrs={'onkeydown':"mascara(this,icpf)"}))
+
+    def clean_cpf(self):
+        cpf = validate_CPF(self.cleaned_data["cpf"])
+        return cpf
+
 
 class CandidatoForm(ModelForm):
     DEFICIENCIA = (
@@ -22,7 +29,7 @@ class CandidatoForm(ModelForm):
 
     class Meta:
         model = Candidato
-        exclude = ['chave', 'dt_inclusao']
+        exclude = ['chave', 'ip', 'dt_inclusao']
 
     def clean_cpf(self):
         cpf = validate_CPF(self.cleaned_data["cpf"])

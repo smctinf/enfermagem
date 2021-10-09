@@ -29,6 +29,7 @@
         Possui deficiência? {% if deficiencia == 'S' %}Sim{% else %}Não{% endif %}<br>
         Indique qual deficiência? {{ qual_deficiencia }}<br>
         Informe se necessita de alguma condição especial para a realização da prova: {{ necessidade }}<br>
-        Data Cadastro: {{ dt_inclusao | date:"SHORT_DATETIME_FORMAT" }}<br>
+        Data Cadastro: {{ dt_inclusao | date:"SHORT_DATETIME_FORMAT" }} - 
+        IP: {{ ip }}<br>
     </body>
 </html>

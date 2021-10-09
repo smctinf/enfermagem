@@ -26,5 +26,6 @@ class Candidato(models.Model):
     deficiencia = models.CharField(max_length=1, choices=DEFICIENCIA)
     qual_deficiencia = models.CharField(max_length=600)
     necessidade = models.CharField(max_length=600)
+    ip = models.GenericIPAddressField(protocol='IPv4')
     chave = models.CharField(unique=True, max_length=36)
     dt_inclusao = models.DateTimeField(auto_now_add=True)

@@ -18,7 +18,7 @@
     </head>
 
     <body>
-        <div class="titulo">FICHA DE INSCRIÇÃO</div> <div class="numero">N° {{ id }}</div><br>
+        <div class="titulo">FICHA DE INSCRIÇÃO</div> <div class="numero">N° {{ candidato.id }}</div><br>
         <br>
         Nome: {{ candidato.nome }}<br>
         Data Nascimento: {{ candidato.dt_nascimento | date:"SHORT_DATE_FORMAT" }}<br>
@@ -29,10 +29,15 @@
         Possui deficiência? {% if candidato.deficiencia == 'S' %}Sim{% else %}Não{% endif %}<br>
         Indique qual deficiência? {{ candidato.qual_deficiencia }}<br>
         Informe se necessita de alguma condição especial para a realização da prova: {{ candidato.necessidade }}<br>
-        Data Cadastro: {{ candidato.dt_inclusao | date:"SHORT_DATETIME_FORMAT" }}<br>
+        Data Cadastro: {{ candidato.dt_inclusao | date:"SHORT_DATETIME_FORMAT" }} - 
+        IP: {{ candidato.ip }}<br>
     </body>
 
-    <script type="text/javascript">
-        onClick="window.print()"
-    </script>
+    <SCRIPT LANGUAGE="JavaScript">
+        window.print();
+        setTimeout(function(){
+            window.close();
+        },5000);
+    </SCRIPT>
+
 </html>
