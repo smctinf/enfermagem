@@ -279,3 +279,56 @@ def cadastro_corrige(request, chave):
         form = CandidatoForm(instance=candidato)
 
     return render(request, 'cadastro.html', { 'form': form })
+
+
+def contato(request):
+    from django.template import Context
+    from django.template.loader import render_to_string, get_template
+    from django.core.mail import EmailMessage
+
+    if request.method == 'POST':
+        form = ContatoForm(request.POST)
+
+        if form.is_valid():
+
+            # Envia e-mail
+
+            dados = {
+                'nome': form.cleaned_data['nome'],
+                'cpf': form.cleaned_data['cpf'],
+                'celular': form.cleaned_data['celular'],
+                'email': form.cleaned_data['email'],
+                'duvida': form.cleaned_data['duvida'],
+            }
+
+            mensagem = get_template('mail_contato.html').render(dados)
+
+            msg = EmailMessage(
+                'Dúvidas',
+                mensagem,
+                'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
+                ['inscricao@sme.novafriburgo.rj.gov.br', 'loyola@sme.novafriburgo.rj.gov.br'],
+            )
+            msg.content_subtype = "html"  # Main content is now text/html
+            msg.send()
+
+            messages.error(request, 'E-Mail enviado. Entraremos em contato em breve para sanar sua dúvida.')
+
+            return redirect ('/')
+
+        else:
+            # Se teve erro:
+            print('Erro: ', form.errors)
+            erro_tmp = str(form.errors)
+            erro_tmp = erro_tmp.replace('<ul class="errorlist">', '')
+            erro_tmp = erro_tmp.replace('</li>', '')
+            erro_tmp = erro_tmp.replace('<ul>', '')
+            erro_tmp = erro_tmp.replace('</ul>', '')
+            erro_tmp = erro_tmp.split('<li>')
+
+            messages.error(request, erro_tmp[2])
+
+    else:
+        form = ContatoForm()
+
+    return render(request, 'contato.html', { 'form': form })

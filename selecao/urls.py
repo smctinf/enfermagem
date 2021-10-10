@@ -12,4 +12,5 @@ urlpatterns = [
     path('consulta', views.consulta, name='consulta'),
     path('consulta_chave/<str:chave>', views.consulta_chave, name='consulta_chave'),
     path('cadastro_corrige/<str:chave>', views.cadastro_corrige, name='cadastro_corrige'),
+    path('contato', views.contato, name='contato'),
 ]
