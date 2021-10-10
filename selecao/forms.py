@@ -77,3 +77,29 @@ class CandidatoForm(ModelForm):
             self.fields['necessidade'].widget.attrs['readonly'] = True
 
         return self.cleaned_data["deficiencia"]
+
+
+class ContatoForm(forms.Form):
+    nome = forms.CharField(label='Nome', max_length=60)
+    cpf = forms.CharField(label='CPF', max_length=14, widget = forms.TextInput(attrs={'onkeydown':"mascara(this,icpf)"}))
+    celular = forms.CharField(label= "Celular", max_length=15, widget = forms.TextInput(attrs={'onkeydown':"mascara(this,icelular)", 'onload' : 'mascara(this,icelular)'}))
+    email = forms.CharField(label='E-Mail', max_length=200)
+    duvida = forms.CharField(label='Dúvida',max_length=1000,widget=forms.Textarea(attrs={'size': '40'}))
+
+    def clean_cpf(self):
+        cpf = validate_CPF(self.cleaned_data["cpf"])
+        return cpf
+
+    def clean_celular(self):
+        telefone = self.cleaned_data["celular"]
+        telefone = telefone.replace("(",'')
+        telefone = telefone.replace(")",'')
+        telefone = telefone.replace("-",'')
+        telefone = telefone.replace(" ",'')
+        if len(telefone) == 10:
+            if telefone[2:3] != '2':
+                raise ValidationError('Insira um número válido ')
+        else:
+            if len(telefone) != 11:
+                raise ValidationError('Insira um número válido ')
+        return telefone
