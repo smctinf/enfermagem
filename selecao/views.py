@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.core.checks.messages import Error
+from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -53,12 +55,11 @@ def cadastro(request):
                     print('não:', is_routable)
                     # The client's IP address is privat
 
-            print('ip:', client_ip)
-
             cadastro.ip = client_ip
 
             cadastro.save()
 
+            # Envia e-mail
 
             dados = {
                 'id': cadastro.id,
@@ -80,27 +81,11 @@ def cadastro(request):
             msg = EmailMessage(
                 'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
                 mensagem,
-                '<Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima> inscricao@sme.novafriburgo.rj.gov.br',
+                'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
                 [cadastro.email],
             )
             msg.content_subtype = "html"  # Main content is now text/html
             msg.send()
-
-            """
-            send_mail(
-                'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
-                mensagem,
-                'enfermagem@sme.novafriburgo.rj.gov.br',
-                [email],
-                fail_silently=False,
-            )
-
-            msg = EmailMessage('Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem', template.render(mensagem), 'enfermagem@sme.novafriburgo.rj.gov.br', email)
-            msg.content_subtype = "html"
-            msg.send()
-
-            # TODO: enviar por e-mail o protocolo de inscrição
-            """
 
             return render(request, 'cadastrook.html', { 'chave': chave })
 
@@ -133,10 +118,94 @@ def consulta(request):
     from django.template.loader import render_to_string, get_template
     from django.core.mail import EmailMessage
     import uuid
-    from ipware import get_client_ip
 
     if request.method == 'POST':
-        form = CandidatoForm(request.POST)
+        form = ConsultaForm(request.POST)
+
+        if form.is_valid():
+
+            cpf = form.cleaned_data['cpf']
+
+            try:
+                candidato = Candidato.objects.get(cpf=cpf)
+            except ObjectDoesNotExist:
+                messages.error(request, 'CPF não cadastrado.')
+                return render(request, 'consulta.html', { 'form': form })
+
+            # Envia e-mail
+
+            dados = {
+                'id': candidato.id,
+                'nome': candidato.nome,
+                'cpf': candidato.cpf,
+                'email': candidato.email,
+                'dt_inclusao': candidato.dt_inclusao,
+                'ip': candidato.ip,
+                'chave': candidato.chave,
+            }
+
+            mensagem = get_template('mail_consulta.html').render(dados)
+
+            msg = EmailMessage(
+                'Consulta a inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
+                mensagem,
+                'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
+                [candidato.email],
+            )
+            msg.content_subtype = "html"  # Main content is now text/html
+            msg.send()
+
+
+            messages.error(request, 'Enviamos um e-mail para o endereço informado, que dará acesso ao cadastro.')
+
+            return redirect ('/')
+
+        else:
+            # Se teve erro:
+            print('Erro: ', form.errors)
+            erro_tmp = str(form.errors)
+            erro_tmp = erro_tmp.replace('<ul class="errorlist">', '')
+            erro_tmp = erro_tmp.replace('</li>', '')
+            erro_tmp = erro_tmp.replace('<ul>', '')
+            erro_tmp = erro_tmp.replace('</ul>', '')
+            erro_tmp = erro_tmp.split('<li>')
+
+            messages.error(request, erro_tmp[2])
+
+    else:
+        form = ConsultaForm()
+
+    return render(request, 'consulta.html', { 'form': form })
+
+
+def consulta_chave(request, chave):
+
+    try:
+        candidato = Candidato.objects.get(chave=chave)
+    except ObjectDoesNotExist:
+        messages.error(request, 'Chave não cadastrada.')
+        return redirect ('/consulta')
+
+    return render(request, 'cadastro_mostra.html', { 'candidato': candidato })
+
+
+
+def cadastro_corrige(request, chave):
+    from django.template import Context
+    from django.template.loader import render_to_string, get_template
+    from django.core.mail import EmailMessage
+    import uuid
+    from ipware import get_client_ip
+
+    try:
+        candidato = Candidato.objects.get(chave=chave)
+    except ObjectDoesNotExist:
+        messages.error(request, 'Chave não cadastrada.')
+        return redirect ('/consulta')
+
+
+    if request.method == 'POST':
+        form = CandidatoForm(request.POST, instance=candidato)
 
         if form.is_valid():
             cadastro = form.save(commit=False)
@@ -160,12 +229,11 @@ def consulta(request):
                     print('não:', is_routable)
                     # The client's IP address is privat
 
-            print('ip:', client_ip)
-
             cadastro.ip = client_ip
 
             cadastro.save()
 
+            # Envia e-mail
 
             dados = {
                 'id': cadastro.id,
@@ -185,29 +253,13 @@ def consulta(request):
             mensagem = get_template('mail.html').render(dados)
 
             msg = EmailMessage(
-                'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
+                'Correção da inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
                 mensagem,
-                '<Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima> inscricao@sme.novafriburgo.rj.gov.br',
+                'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
                 [cadastro.email],
             )
             msg.content_subtype = "html"  # Main content is now text/html
             msg.send()
-
-            """
-            send_mail(
-                'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
-                mensagem,
-                'enfermagem@sme.novafriburgo.rj.gov.br',
-                [email],
-                fail_silently=False,
-            )
-
-            msg = EmailMessage('Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem', template.render(mensagem), 'enfermagem@sme.novafriburgo.rj.gov.br', email)
-            msg.content_subtype = "html"
-            msg.send()
-
-            # TODO: enviar por e-mail o protocolo de inscrição
-            """
 
             return render(request, 'cadastrook.html', { 'chave': chave })
 
@@ -224,6 +276,6 @@ def consulta(request):
             messages.error(request, erro_tmp[2])
 
     else:
-        form = ConsultaForm()
+        form = CandidatoForm(instance=candidato)
 
-    return render(request, 'consulta.html', { 'form': form })
+    return render(request, 'cadastro.html', { 'form': form })

@@ -503,6 +503,14 @@ form ul {
 
     </head>
 
+    <SCRIPT LANGUAGE="JavaScript">
+        {% if messages %}
+            {% for message in messages %}
+                alert("{{ message }}");
+            {% endfor %}
+        {% endif %}
+    </script>
+
     <body>
         <style>
             #crc-noticias .item{
