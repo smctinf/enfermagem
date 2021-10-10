@@ -1,5 +1,7 @@
 {% extends "cab.html" %}
 
+{% load template_filters %}
+
 {% load static %}
 
 {% block cab %}
@@ -21,27 +23,70 @@
         </div>
     </div>
 
-    <ul>
-    <li>Além das informações do cadastro abaixo, coletaremos também o endereço IP do dispositivo utilizado para a inscrição apenas com o intuito de oferecer maior segurança;
-    <li>Os dados armazenados serão utilizados única e exclusivamente no processo Seletivo do ano de 2021 para o Curso de Técnico em Enfermagem da Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima;
-    <li>Os dados informados serão compartilhados apenas com a equipe responsável por este Processo Seletivo, e com a equipe da Secretaria Municipal de Ciência, Tecnologia, Inovação e Educação Profissionalizante e Superior, desenvolvedora deste Sistema de Cadastro;
-    <li>Tão logo o processo se encerre, todos os dados serão excluídos de nossa base de dados, atendendo a Lei Nº 13.709/2018;
-    </ul>
+    <h5>Caso queira imprimir o protocolo de inscrição, clique <a href="{% url 'selecao:imprime' candidato.chave %}" target="_blank"><span style="cursor:pointer;text-decoration:underline;color:#0000ff;">AQUI.</span></a></h5>
+
     <br>
 
     <div class="col">
         <h3>Cadastro:</h3>
     </div>
 
-    <form method="POST" id="formulario">
 
-        {% csrf_token %}
-        <table  class="table table-striped table-bordered">
-            {{ form.as_table }}
-        </table>
+    <table  class="table table-striped table-bordered">
 
-        <input class="btn btn-primary" type="submit" value="Confirma">
-    </form>
+        <tr>
+            <th>Inscrição N°</th>
+            <td>{{ candidato.id }}</td>
+        </tr>
+        <tr>
+            <th>Nome:</th>
+            <td>{{ candidato.nome }}</td>
+        </tr>
+        <tr>
+            <th>Data Nascimento:</th>
+            <td>{{ candidato.dt_nascimento | date:"SHORT_DATE_FORMAT" }}</td>
+        </tr>
+        <tr>
+            <th>CPF:</th>
+            <td>{{ candidato.cpf | formata_cpf }}</td>
+        </tr>
+        <tr>
+            <th>Celular:</th>
+            <td>{{ candidato.celular | formata_tel }}</td>
+        </tr>
+        <tr>
+            <th>Telefone:</th>
+            <td>{{ candidato.tel | formata_tel }}</td>
+        </tr>
+        <tr>
+            <th>E-Mail:</th>
+            <td>{{ candidato.email }}</td>
+        </tr>
+        <tr>
+            <th>Possui deficiência?</th>
+            <td>{% if candidato.deficiencia == 'S' %}Sim{% else %}Não{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Indique qual deficiência?</th>
+            <td>{{ candidato.qual_deficiencia }}</td>
+        </tr>
+        <tr>
+            <th>Informe se necessita de alguma condição especial para a realização da prova:</th>
+            <td>{{ candidato.necessidade }}</td>
+        </tr>
+        <tr>
+            <th>Data Cadastro:</th>
+            <td>{{ candidato.dt_inclusao | date:"SHORT_DATETIME_FORMAT" }}</td>
+        </tr>
+        <tr>
+            <th>IP:</th>
+            <td>{{ candidato.ip }}</td>
+        </tr>
+
+    </table>
+
+    <a href="{% url 'selecao:cadastro_corrige' candidato.chave %}" class="btn btn-primary" role="button">Corrigir informações</a>
+
 
 </div>
 
