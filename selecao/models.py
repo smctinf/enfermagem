@@ -93,3 +93,17 @@ class Alocacao(models.Model):
     sala = models.ForeignKey(Sala, on_delete=models.PROTECT)
     candidato = models.ForeignKey(Candidato, on_delete=models.PROTECT)
     dt_inclusao = models.DateTimeField(auto_now_add=True)
+
+
+# Tabela para registrar acessos ao comprovante
+class Acesso(models.Model):
+
+    def __str__(self):
+        return '%s - %s' % (self.candidato, self.ip)
+
+    class Meta:
+        ordering = ['dt_inclusao']
+
+    candidato = models.ForeignKey(Candidato, on_delete=models.PROTECT)
+    ip = models.GenericIPAddressField(protocol='IPv4')
+    dt_inclusao = models.DateTimeField(auto_now_add=True)

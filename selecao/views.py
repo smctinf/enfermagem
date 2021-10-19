@@ -419,14 +419,44 @@ def envia_email(alocacao):
         mensagem,
         'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
         ['loyola@sme.novafriburgo.rj.gov.br', 'eenfermagemnsf@sme.novafriburgo.rj.gov.br'],
+#        [alocacao.candidato.email],
     )
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
 
 
 def confirmacao(request, chave):
+    from ipware import get_client_ip
 
     candidato = Candidato.objects.get(chave=chave)
     alocacao = Alocacao.objects.get(candidato=candidato)
 
+    # Busca IP
+
+    client_ip, is_routable = get_client_ip(request)
+    if client_ip is None:
+        # Unable to get the client's IP address
+        print(client_ip)
+        client_ip = '0.0.0.0'
+    else:
+        # We got the client's IP address
+        if is_routable:
+            print('sim:', is_routable)
+            # The client's IP address is publicly routable on the Internet
+        else:
+            print('não:', is_routable)
+            # The client's IP address is privat
+
+    acesso = Acesso(candidato=candidato, ip=client_ip)
+    acesso.save()
+
     return render(request, 'confirmacao.html', { 'alocacao': alocacao })
+
+
+def corrige_nome(request):
+
+    candidatos = Candidato.objects.all()
+
+    for candidato in candidatos:
+        candidato.nome = candidato.nome.title()
+        candidato.save()

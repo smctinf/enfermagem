@@ -37,3 +37,10 @@ class AlocacaoAdmin(admin.ModelAdmin):
     search_fields = ['candidato__nome']
 
 admin.site.register(Alocacao, AlocacaoAdmin)
+
+class AcessoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'candidato', 'ip', 'dt_inclusao']
+#    list_filter = ['sala']
+    search_fields = ['candidato__nome']
+
+admin.site.register(Acesso, AcessoAdmin)
