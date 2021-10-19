@@ -14,5 +14,6 @@ urlpatterns = [
     path('cadastro_corrige/<str:chave>', views.cadastro_corrige, name='cadastro_corrige'),
     path('contato', views.contato, name='contato'),
     path('alocacao', views.alocacao, name='alocacao'),
-#    path('email_confirmacao', views.email_confirmacao, name='email_confirmacao'),
+    path('divulga', views.divulga, name='divulga'),
+    path('confirmacao/<str:chave>', views.confirmacao, name='confirmacao'),
 ]
