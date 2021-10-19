@@ -376,20 +376,22 @@ def aloca(candidato, sala):
     alocacao = Alocacao(sala=sala, candidato=candidato)
     alocacao.save()
 
-"""
 
-    for x in range(18):
-        print('x:', x)
+def divulga(request):
+    from django.http import HttpResponse
 
-        if
+    alocacoes = Alocacao.objects.all()[1:2]
 
-    exit()
+    print(alocacoes)
 
-"""
+    for alocacao in alocacoes:
+        envia_email(alocacao)
 
 
+    return HttpResponse("Envio de e-mail concluído.")
 
-def envia_email(candidato):
+
+def envia_email(alocacao):
     from django.template import Context
     from django.template.loader import render_to_string, get_template
     from django.core.mail import EmailMessage
@@ -397,22 +399,34 @@ def envia_email(candidato):
     # Envia e-mail
 
     dados = {
-        """
-        'nome': form.cleaned_data['nome'],
-        'cpf': form.cleaned_data['cpf'],
-        'celular': form.cleaned_data['celular'],
-        'email': form.cleaned_data['email'],
-        'duvida': form.cleaned_data['duvida'],
-        """
+        'nome': alocacao.candidato.nome,
+        'cpf': alocacao.candidato.cpf,
+        'email': alocacao.candidato.email,
+        'sala': alocacao.sala.sala,
+        'horario': alocacao.sala.horario.horario,
+        'local': alocacao.sala.horario.local.nome,
+        'rua': alocacao.sala.horario.local.rua,
+        'numero': alocacao.sala.horario.local.numero,
+        'bairro': alocacao.sala.horario.local.bairro,
+        'cidade': alocacao.sala.horario.local.cidade,
+        'chave': alocacao.candidato.chave,
     }
 
-    mensagem = get_template('mail_contato.html').render(dados)
+    mensagem = get_template('mail_alocacao.html').render(dados)
 
     msg = EmailMessage(
-        'Dúvidas',
+        'Local e horário de prova',
         mensagem,
         'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
-        ['inscricao@sme.novafriburgo.rj.gov.br', 'loyola@sme.novafriburgo.rj.gov.br', 'eenfermagemnsf@sme.novafriburgo.rj.gov.br'],
+        ['loyola@sme.novafriburgo.rj.gov.br'],
     )
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
+
+
+def confirmacao(request, chave):
+
+    candidato = Candidato.objects.get(chave=chave)
+    alocacao = Alocacao.objects.get(candidato=candidato)
+
+    return render(request, 'confirmacao.html', { 'alocacao': alocacao })
