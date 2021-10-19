@@ -332,3 +332,87 @@ def contato(request):
         form = ContatoForm()
 
     return render(request, 'contato.html', { 'form': form })
+
+
+def alocacao(request):
+    from django.http import HttpResponse
+
+
+    candidatos = Candidato.objects.all().order_by('nome')
+
+    horario1 = Horario.objects.get(id=1)
+    horario2 = Horario.objects.get(id=2)
+
+    horario = horario1
+
+    num_sala = 1
+
+    x = 16
+
+    for candidato in candidatos:
+
+        x += 1
+
+        if candidato.nome[0].upper() == 'L' and horario == horario1:
+            print (x, candidato)
+            horario = horario2
+            x = 17
+            num_sala = 1
+
+        if x > 15:
+            sala = Sala(horario=horario, sala=str(num_sala))
+            sala.save()
+            num_sala += 1
+            x = 0
+
+
+        aloca(candidato, sala)
+
+    return HttpResponse("Alocação concluída.")
+
+
+def aloca(candidato, sala):
+
+    alocacao = Alocacao(sala=sala, candidato=candidato)
+    alocacao.save()
+
+"""
+
+    for x in range(18):
+        print('x:', x)
+
+        if
+
+    exit()
+
+"""
+
+
+
+def envia_email(candidato):
+    from django.template import Context
+    from django.template.loader import render_to_string, get_template
+    from django.core.mail import EmailMessage
+
+    # Envia e-mail
+
+    dados = {
+        """
+        'nome': form.cleaned_data['nome'],
+        'cpf': form.cleaned_data['cpf'],
+        'celular': form.cleaned_data['celular'],
+        'email': form.cleaned_data['email'],
+        'duvida': form.cleaned_data['duvida'],
+        """
+    }
+
+    mensagem = get_template('mail_contato.html').render(dados)
+
+    msg = EmailMessage(
+        'Dúvidas',
+        mensagem,
+        'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
+        ['inscricao@sme.novafriburgo.rj.gov.br', 'loyola@sme.novafriburgo.rj.gov.br', 'eenfermagemnsf@sme.novafriburgo.rj.gov.br'],
+    )
+    msg.content_subtype = "html"  # Main content is now text/html
+    msg.send()
