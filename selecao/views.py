@@ -79,7 +79,7 @@ def cadastro(request):
             mensagem = get_template('mail.html').render(dados)
 
             msg = EmailMessage(
-                'Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
+                'Confirmação de Inscrição do Processo Seletivo para Curso de Técnico em Enfermagem',
                 mensagem,
                 'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
                 [cadastro.email],
