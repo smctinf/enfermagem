@@ -453,6 +453,7 @@ def confirmacao(request, chave):
     return render(request, 'confirmacao.html', { 'alocacao': alocacao })
 
 
+"""
 def corrige_nome(request):
 
     candidatos = Candidato.objects.all()
@@ -460,3 +461,4 @@ def corrige_nome(request):
     for candidato in candidatos:
         candidato.nome = candidato.nome.title()
         candidato.save()
+"""

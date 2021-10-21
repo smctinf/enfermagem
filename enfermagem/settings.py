@@ -49,6 +49,7 @@ ALLOWED_HOSTS = ['enfermagem.pmnf.rj.gov.br', '127.0.0.1']
 
 INSTALLED_APPS = [
     'selecao.apps.SelecaoConfig',
+    'adm.apps.AdmConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -166,3 +167,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = email_user
 EMAIL_HOST_PASSWORD = email_pass
+
+LOGIN_REDIRECT_URL = '/adm'
+LOGOUT_REDIRECT_URL = '/accounts/login'

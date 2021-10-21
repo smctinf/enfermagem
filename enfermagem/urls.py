@@ -22,4 +22,6 @@ admin.site.site_title = 'Escola de Enfermagem'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('selecao.urls', namespace='selecao')),
+    path('adm/', include('adm.urls', namespace='adm')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

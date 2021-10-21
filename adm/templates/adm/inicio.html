@@ -1,0 +1,21 @@
+{% extends "adm/cab.html" %}
+
+{% load static %}
+
+{% block cab %}
+<br>
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+            <h3>Início:</h3>
+        </div>
+    </div>
+    <ul>
+    <li><a href="{% url 'adm:envia_email' %}">Envia E-Mail</a></li>
+    </ul>
+    <br>
+
+</div>
+
+{% endblock %}
