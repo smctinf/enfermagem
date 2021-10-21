@@ -380,7 +380,7 @@ def aloca(candidato, sala):
 def divulga(request):
     from django.http import HttpResponse
 
-    alocacoes = Alocacao.objects.all()[1:2]
+    alocacoes = Alocacao.objects.filter(candidato__nome__gte='Wesley Laurindo De Santana')
 
     print(alocacoes)
 
@@ -418,8 +418,8 @@ def envia_email(alocacao):
         'Local e horário de prova',
         mensagem,
         'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
-        ['loyola@sme.novafriburgo.rj.gov.br', 'eenfermagemnsf@sme.novafriburgo.rj.gov.br'],
-#        [alocacao.candidato.email],
+#        ['loyola@sme.novafriburgo.rj.gov.br', 'eenfermagemnsf@sme.novafriburgo.rj.gov.br'],
+        [alocacao.candidato.email],
     )
     msg.content_subtype = "html"  # Main content is now text/html
     msg.send()
