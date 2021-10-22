@@ -100,3 +100,11 @@ def envia(request, id):
     messages.error(request, 'E-Mail enviado.')
 
     return redirect('adm:envia_email')
+
+
+@login_required
+def relacao_candidatos(request):
+
+    alocacoes = Alocacao.objects.all().order_by('candidato__nome')
+
+    return render(request, "adm/relacao_candidatos.html",{"alocacoes" : alocacoes})
