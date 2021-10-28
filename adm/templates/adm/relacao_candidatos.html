@@ -34,8 +34,7 @@
 
                 {% for alocacao in alocacoes %}
 
-                    {% if forloop.counter0|divisibleby:16 %}
-
+                    {% ifchanged alocacao.sala.id %}
                         {%  if not forloop.first %}
                             </table>
                             <div class="break"></div>
@@ -61,7 +60,7 @@
                         </div>
 
                         <table  class="table table-striped table-bordered">
-                    {% endif %}
+                    {% endifchanged %}
 
 
                     <tr>
