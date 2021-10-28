@@ -143,7 +143,7 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/enfermagem/site/enfermagem/static'
+# STATIC_ROOT = '/home/enfermagem/site/enfermagem/static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
