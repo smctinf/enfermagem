@@ -17,10 +17,15 @@ def inicio(request):
     data_inicio = datetime.strptime('11/10/2021', '%d/%m/%Y').date()
     data_fim = datetime.strptime('15/10/2021', '%d/%m/%Y').date()
 
+    data_resultado = datetime.strptime('08/12/2021', '%d/%m/%Y').date()
+
+    if hoje >= data_resultado:
+        return render(request, 'inicio_resultado.html')
+
     if hoje >= data_inicio and hoje <= data_fim:
         return render(request, 'inicio.html')
-    else:
-        return render(request, 'inicio_aguardar.html')
+
+    return render(request, 'inicio_aguardar.html')
 
 
 def cadastro(request):
@@ -380,7 +385,8 @@ def aloca(candidato, sala):
 def divulga(request):
     from django.http import HttpResponse
 
-    alocacoes = Alocacao.objects.filter(candidato__nome__gte='Wesley Laurindo De Santana')
+#    alocacoes = Alocacao.objects.filter(candidato__nome__gte='Wesley Laurindo De Santana')
+    alocacoes = Alocacao.objects.all()
 
     print(alocacoes)
 
@@ -412,17 +418,25 @@ def envia_email(alocacao):
         'chave': alocacao.candidato.chave,
     }
 
-    mensagem = get_template('mail_alocacao.html').render(dados)
+#    mensagem = get_template('mail_alocacao.html').render(dados)
+    mensagem = get_template('mail_alocacao2.html').render(dados)
 
     msg = EmailMessage(
         'Local e horário de prova',
         mensagem,
         'Escola de Auxiliares e Técnicos de Enfermagem Nossa Senhora de Fátima - Inscrição <inscricao@sme.novafriburgo.rj.gov.br>',
+#        ['loyola@sme.novafriburgo.rj.gov.br',],
 #        ['loyola@sme.novafriburgo.rj.gov.br', 'eenfermagemnsf@sme.novafriburgo.rj.gov.br'],
         [alocacao.candidato.email],
     )
     msg.content_subtype = "html"  # Main content is now text/html
-    msg.send()
+
+    try:
+        msg.send()
+    except:
+        print('Erro')
+        print(dados)
+        exit()
 
 
 def confirmacao(request, chave):

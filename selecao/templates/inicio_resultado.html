@@ -1,0 +1,22 @@
+{% extends "cab.html" %}
+
+{% load static %}
+
+{% block cab %}
+<br>
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+            <h3>Resultado do PROCESSO SELETIVO PARA CURSO DE TÉCNICO EM ENFERMAGEM:</h3>
+            <br>
+            <ul>
+                <li>Clique <a href="https://drive.google.com/file/d/1ucjsMkFvblIojmp-siWcpBjGa1N4SiwY/view?usp=sharing" target="_blank"><span style="cursor:pointer;text-decoration:underline;color:#0000ff;">AQUI</span></a> para baixar arquivo com o resultado.</li>
+                <li>Em caso de dúvidas, entre em contato conosco clicando <a href="{% url 'selecao:contato' %}"><span style="cursor:pointer;text-decoration:underline;color:#0000ff;">AQUI.</span></a>.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -116,3 +116,11 @@ def relacao_candidatos_assinatura(request):
     alocacoes = Alocacao.objects.all().order_by('candidato__nome')
 
     return render(request, "adm/relacao_candidatos_assinatura.html",{"alocacoes" : alocacoes})
+
+
+@login_required
+def relacao_candidatos_porta(request):
+
+    alocacoes = Alocacao.objects.all().order_by('candidato__nome')
+
+    return render(request, "adm/relacao_candidatos_porta.html",{"alocacoes" : alocacoes})
